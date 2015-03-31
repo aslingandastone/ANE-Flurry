@@ -258,7 +258,64 @@ DEFINE_ANE_FUNCTION(startTimedEvent)
     if (FREGetObjectAsUTF8(argv[0], &stringLength, &value) == FRE_OK)
     {
         NSString *eventName = [NSString stringWithUTF8String:(char*)value];
-        [Flurry logEvent:eventName timed:YES];
+        
+        NSMutableDictionary *params;
+        if (argc > 1 && argv[1] != NULL && argv[2] != NULL && argv[1] != nil && argv[2] != NULL)
+        {
+            FREObject arrKey = argv[1]; // array
+            uint32_t arr_len = 0; // array length
+            
+            FREObject arrValue = argv[2]; // array
+            
+            if (arrKey != nil)
+            {
+                if (FREGetArrayLength(arrKey, &arr_len) != FRE_OK)
+                {
+                    arr_len = 0;
+                }
+                
+                params = [[NSMutableDictionary alloc] init];
+                
+                for (int32_t i = arr_len-1; i >= 0; i--)
+                {
+                    // get an element at index
+                    FREObject key;
+                    if (FREGetArrayElementAt(arrKey, i, &key) != FRE_OK)
+                    {
+                        continue;
+                    }
+                    
+                    FREObject value;
+                    if (FREGetArrayElementAt(arrValue, i, &value) != FRE_OK)
+                    {
+                        continue;
+                    }
+                    
+                    // convert it to NSString
+                    uint32_t stringLength;
+                    const uint8_t *keyString;
+                    if (FREGetObjectAsUTF8(key, &stringLength, &keyString) != FRE_OK)
+                    {
+                        continue;
+                    }
+                    
+                    const uint8_t *valueString;
+                    if (FREGetObjectAsUTF8(value, &stringLength, &valueString) != FRE_OK)
+                    {
+                        continue;
+                    }
+                    
+                    [params setValue:[NSString stringWithUTF8String:(char*)valueString] forKey:[NSString stringWithUTF8String:(char*)keyString]];
+                }
+            }
+        }
+        
+        if (params != nil && params.count > 0)
+        {
+            [Flurry logEvent:eventName withParameters:params timed:TRUE];
+        } else {
+            [Flurry logEvent:eventName withParameters:nil timed:TRUE];
+        }
     }
 
     return nil;

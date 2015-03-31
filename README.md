@@ -1,14 +1,14 @@
 Air Native Extension for Flurry Analytics (iOS + Android)
 ======================================
 
-This is an [Air native extension](http://www.adobe.com/devnet/air/native-extensions-for-air.html) for [Flurry](http://flurry.com) SDK on iOS and Android. It has been developed by [FreshPlanet](http://freshplanet.com) and is used in the game [SongPop](http://songpop.fm).
+This is an [Air native extension](http://www.adobe.com/devnet/air/native-extensions-for-air.html) for [Flurry](http://flurry.com) SDK on iOS and Android. Forked from [FreshPlanet](http://freshplanet.com). Extended functionality by [A Sling and a Stone] (http://aslingandastone.com).
 
 
 Flurry SDK Versions
 ---------
 
-* iOS: 5.2.0
-* Android: 4.0.0
+* iOS: 6.2.0
+* Android: 5.3.0
 
 
 Installation
@@ -17,47 +17,55 @@ Installation
 The ANE binary (AirFlurry.ane) is located in the *bin* folder. You should add it to your application project's Build Path and make sure to package it with your app (more information [here](http://help.adobe.com/en_US/air/build/WS597e5dadb9cc1e0253f7d2fc1311b491071-8000.html)).
 
 
-Notes:
-* included binary has been compiled for 64-bit iOS support
+##Usage
 
+####Start a Flurry session
 
-Documentation
---------
+```actionscript
+Flurry.getInstance().setIOSAPIKey(YOUR_IOS_API_KEY_HERE);
+Flurry.getInstance().startSession();
+```
 
-Actionscript documentation is available in HTML format in the *docs* folder.
+####Stop a Flurry session
 
+```actionscript
+Flurry.getInstance().stopSession();
+```
 
-Build script
----------
+####Log an Event
 
-Should you need to edit the extension source code and/or recompile it, you will find an ant build script (build.xml) in the *build* folder:
+```actionscript
+Flurry.getInstance().logEvent("Basic Event");
+```
 
-```bash
-cd /path/to/the/ane
+####Log an Event with Parameters
 
-# Setup build configuration
-cd build
-mv example.build.config build.config
-# Edit build.config file to provide your machine-specific paths
+```actionscript
+Flurry.getInstance().logEvent("Basic Event", {param1:value1});
+```
 
-# Build the ANE
-ant
+####Log a Timed Event
+
+```actionscript
+Flurry.getInstance().startTimedEvent("Basic Timed Event");
+```
+
+Timed events must be stopped when completed. 
+
+```actionscript
+Flurry.getInstance().stopTimedEvent("Basic Timed Event");
 ```
 
 
-Authors
+####Log a Timed Event with Parameters
+
+```actionscript
+Flurry.getInstance().startTimedEvent("Basic Timed Event", {param1:value1});
+```
+
+Authors & License
 ------
 
-This ANE has been written by [Thibaut Crenn](https://github.com/titi-us) and [Alexis Taugeron](http://alexistaugeron.com). It belongs to [FreshPlanet Inc.](http://freshplanet.com) and is distributed under the [Apache Licence, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+This ANE has been written by [Thibaut Crenn](https://github.com/titi-us) and [Alexis Taugeron](http://alexistaugeron.com). It belongs to [FreshPlanet Inc.](http://freshplanet.com) and is distributed under the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
-
-
-Join the FreshPlanet team - GAME DEVELOPMENT in NYC
-------
-
-We are expanding our mobile engineering teams.
-
-FreshPlanet is a NYC based mobile game development firm and we are looking for senior engineers to lead the development initiatives for one or more of our games/apps. We work in small teams (6-9) who have total product control.  These teams consist of mobile engineers, UI/UX designers and product experts.
-
-
-Please contact Tom Cassidy (tcassidy@freshplanet.com) or apply at http://freshplanet.com/jobs/
+Extended functionality by [Cam Heikkinen](https://twitter.com/camaech). Written for [A Sling and a Stone] (http://aslingandastone.com).

@@ -269,7 +269,7 @@ package com.freshplanet.nativeExtensions
 			}
 		}
 		
-		public function startTimedEvent(eventName:String):void
+		public function startTimedEvent(eventName:String, properties:Object = null):void
 		{
 			if (!checkLength(eventName))
 			{
@@ -279,9 +279,37 @@ package com.freshplanet.nativeExtensions
 			
 			log("Start timed event - " + eventName);
 			
+			var parameterKeys:Array = [];
+			var parameterValues:Array = [];
+			if (properties)
+			{
+				var value:String;
+				var count:int = 0;
+				for (var key:String in properties)
+				{
+					if (count > 10)
+					{
+						log("Too many properties provided. Only kept " + JSON.stringify(parameterKeys));
+						break;
+					}
+					
+					value = properties[key].toString();
+					if (checkLength(value) && checkLength(key))
+					{
+						parameterKeys.push(key);
+						parameterValues.push(value);
+					}
+					else
+					{
+						log("Skipped property " + key + ". Value " + value + " was too long");
+					}
+					count++;
+				}
+			}
+			
 			if (isSupported)
 			{
-				_context.call("startTimedEvent", eventName)
+				_context.call("startTimedEvent", eventName, parameterKeys, parameterValues)
 			}
 		}
 		
